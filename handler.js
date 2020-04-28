@@ -94,4 +94,4 @@ module.exports.getAllOrgs = (event, context, callback) => {
 // //   //DynamoDB can only update one field at a time!
 // //   const paramName = body.orgName
 // // }
-//TODO: finish this - partway done
+//TODO: finish this - partway done with this

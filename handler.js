@@ -27,12 +27,20 @@ function sortByDate(a, b) {
 module.exports.createOrg = (event, context, callback) => {
   //context holds env variables, AWS stuff, etc.
   //callback sends response or error
-  
-  const reqBody = JSON.parse(event.body); //request body
-  console.log(`POST request received for ${body.orgName}`)
 
-  //validation - if org name isn't there or empty, it errors out (can add others later)
+  const reqBody = JSON.parse(event.body); //request body
+  console.log(`POST request received for ${body.orgName}`);
+
+  //validation - must have name:
   if (!reqBody.orgName || reqBody.orgName.trim() === '') {
+    return callback(null, response(400, { error: 'Org must have name' }));
+  }
+  //validation - must have bio:
+  if (!reqBody.briefBio || reqBody.briefBio.trim() === '') {
+    return callback(null, response(400, { error: 'Org must have name' }));
+  }
+  //validation - must have contact details:
+  if (!reqBody.contactDetails || reqBody.contactDetails.trim() === '') {
     return callback(null, response(400, { error: 'Org must have name' }));
   }
 
@@ -64,8 +72,8 @@ module.exports.createOrg = (event, context, callback) => {
 //--------GET ALL ORGS:--------
 
 module.exports.getAllOrgs = (event, context, callback) => {
-    console.log('GET request for all orgs received')
-  
+  console.log('GET request for all orgs received');
+
   return db
     .scan({
       TableName: orgsTable,
@@ -80,8 +88,8 @@ module.exports.getAllOrgs = (event, context, callback) => {
 module.exports.getOrg = (event, context, callback) => {
   //gets the id out of the url parameters:
   const id = event.pathParameters.id;
-  console.log(`GET request for id ${id} received`)
-  
+  console.log(`GET request for id ${id} received`);
+
   //sets up the params to tell the db which table and that the key will be the id grabbed from the url:
   const params = {
     Key: {
@@ -106,47 +114,56 @@ module.exports.getOrg = (event, context, callback) => {
 
 module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
-  console.log(`UPDATE request for id ${id} received`)
+  console.log(`UPDATE request for id ${id} received`);
   const body = JSON.parse(event.body);
-  // //dynamodb only lets you update one field at a time
+  // dynamodb only lets you update one field at a time
 
   const paramName = body.paramName;
   const paramValue = body.paramValue;
 
   const params = {
     Key: {
-      id: id
+      id: id,
     },
     TableName: orgsTable,
     ConditionExpression: 'attribute_exists(id)',
     UpdateExpression: `set ${paramOrgName} = :v`,
-    ExpressionAttributeValues = {
-      ':v': paramValue
+    ExpressionAttributeValues: {
+      ':v': paramValue,
     },
-    ReturnValue: 'ALL_NEW'
-  }
+    ReturnValue: 'ALL_NEW',
+  };
 
-  return db.update(params)
-  .promise()
-  .then(res => {
-    callback(null, response(200, res))
-  }).catch(err => callback(null, response(err.statusCode, err)))
+  return db
+    .update(params)
+    .promise()
+    .then((res) => {
+      callback(null, response(200, res));
+    })
+    .catch((err) => callback(null, response(err.statusCode, err)));
 };
 
 //--------DELETE ORG:--------
 
-module.exports.deleteOrg = (event, context, callback) =>{
-  const id = event.pathParameters.id;  
-  console.log(`DELETE request for id ${id} received`)
-  
+module.exports.deleteOrg = (event, context, callback) => {
+  const id = event.pathParameters.id;
+  console.log(`DELETE request for id ${id} received`);
+
   const params = {
     Key: {
-      id: id
+      id: id,
     },
-    TableName: postsTable
+    TableName: postsTable,
   };
-  
-  return db.delete(params)
-  .promise()
-  .then(()=>callback(null, response(200, {message: `Org ${id} deleted successfully`})))
-}
+
+  return db
+    .delete(params)
+    .promise()
+    .then(() =>
+      callback(
+        null,
+        response(200, { message: `Org ${id} deleted successfully` })
+      )
+    )
+    .catch((err) => callback(null, response(err.statusCode, err)));
+};

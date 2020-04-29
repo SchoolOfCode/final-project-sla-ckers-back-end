@@ -68,24 +68,26 @@ module.exports.getAllOrgs = (event, context, callback) => {
     .catch((err) => callback(null, response(err.statusCode, err)));
 };
 
-// //GET ORG BY ID:
-// module.exports.getOrg = (event, context, callback) => {
-//   const id = event.pathParameters.id;
+//GET ORG BY ID:
+module.exports.getOrg = (event, context, callback) => {
+  const id = event.pathParameters.id;
 
-//   const params = {
-//     Key: {
-//       id: id
-//     },
-//     TableName: orgsTable
-//   }
+  const params = {
+    Key: {
+      id: id,
+    },
+    TableName: orgsTable,
+  };
 
-//   return db.get(params).promise().then(
-//     res=>{
-//       if(res.Item) callback(null, response(200, res.Item))
-//       else callback(null, response(404, {error: 'organisation not found'}))
-//     }
-//   ).catch((err)=> callback(null, response(err.statusCode, err)))
-// }
+  return db
+    .get(params)
+    .promise()
+    .then((res) => {
+      if (res.Item) callback(null, response(200, res.Item));
+      else callback(null, response(404, { error: 'organisation not found' }));
+    })
+    .catch((err) => callback(null, response(err.statusCode, err)));
+};
 
 // // //UPDATE ORG:
 // // module.exports.updatePost = (event, context, callback){

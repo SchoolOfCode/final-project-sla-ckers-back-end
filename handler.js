@@ -25,24 +25,24 @@ function sortByDate(a, b) {
 //--------POST NEW ORG:--------
 
 module.exports.createOrg = (event, context, callback) => {
+  console.log(`POST request received`);
   //context holds env variables, AWS stuff, etc.
   //callback sends response or error
 
   const reqBody = JSON.parse(event.body); //request body
-  console.log(`POST request received for ${body.orgName}`);
 
-  //validation - must have name:
-  if (!reqBody.orgName || reqBody.orgName.trim() === '') {
-    return callback(null, response(400, { error: 'Org must have name' }));
-  }
-  //validation - must have bio:
-  if (!reqBody.briefBio || reqBody.briefBio.trim() === '') {
-    return callback(null, response(400, { error: 'Org must have name' }));
-  }
-  //validation - must have contact details:
-  if (!reqBody.contactDetails || reqBody.contactDetails.trim() === '') {
-    return callback(null, response(400, { error: 'Org must have name' }));
-  }
+  // //validation - must have name:
+  // if (!reqBody.orgName || reqBody.orgName.trim() === '') {
+  //   return callback(null, response(400, { error: 'Org must have name' }));
+  // }
+  // //validation - must have bio:
+  // if (!reqBody.briefBio || reqBody.briefBio.trim() === '') {
+  //   return callback(null, response(400, { error: 'Org must have name' }));
+  // }
+  // //validation - must have contact details:
+  // if (!reqBody.contactDetails || reqBody.contactDetails.trim() === '') {
+  //   return callback(null, response(400, { error: 'Org must have name' }));
+  // }
 
   const org = {
     id: uuid(),
@@ -116,8 +116,9 @@ module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
   console.log(`UPDATE request for id ${id} received`);
   const body = JSON.parse(event.body);
-  // dynamodb only lets you update one field at a time
-
+  //dynamodb only lets you update one field at a time
+  //so have to do each field by name and value (i.e. {"paramName": "orgName", "paramValue": "New Name"})
+  //TODO: Need to consider this on the front end!
   const paramName = body.paramName;
   const paramValue = body.paramValue;
 
@@ -138,7 +139,7 @@ module.exports.updateOrg = (event, context, callback) => {
     .update(params)
     .promise()
     .then((res) => {
-      callback(null, response(200, res));
+      callback(null, response(200, { paramName, paramValue }));
     })
     .catch((err) => callback(null, response(err.statusCode, err)));
 };
@@ -153,7 +154,7 @@ module.exports.deleteOrg = (event, context, callback) => {
     Key: {
       id: id,
     },
-    TableName: postsTable,
+    TableName: orgsTable,
   };
 
   return db

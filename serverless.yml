@@ -56,7 +56,7 @@ functions:
     events:
       - http:
           path: /orgs/{id}
-          method: get
+          method: delete
           cors: true
 
 resources:

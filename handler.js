@@ -69,6 +69,7 @@ module.exports.getAllOrgs = (event, context, callback) => {
 };
 
 //GET ORG BY ID:
+//FIXME: Doesn't work yet! Investigate!
 module.exports.getOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
 

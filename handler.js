@@ -22,12 +22,14 @@ function sortByDate(a, b) {
   }
 }
 
-//--------POST REQUEST:--------
+//--------POST NEW ORG:--------
 
 module.exports.createOrg = (event, context, callback) => {
   //context holds env variables, AWS stuff, etc.
   //callback sends response or error
+  
   const reqBody = JSON.parse(event.body); //request body
+  console.log(`POST request received for ${body.orgName}`)
 
   //validation - if org name isn't there or empty, it errors out (can add others later)
   if (!reqBody.orgName || reqBody.orgName.trim() === '') {
@@ -62,6 +64,8 @@ module.exports.createOrg = (event, context, callback) => {
 //--------GET ALL ORGS:--------
 
 module.exports.getAllOrgs = (event, context, callback) => {
+    console.log('GET request for all orgs received')
+  
   return db
     .scan({
       TableName: orgsTable,
@@ -73,11 +77,11 @@ module.exports.getAllOrgs = (event, context, callback) => {
 
 //--------GET ORG BY ID:--------
 
-//FIXME: Doesn't work yet! Investigate!
 module.exports.getOrg = (event, context, callback) => {
   //gets the id out of the url parameters:
   const id = event.pathParameters.id;
-  console.log({ idParameter: id });
+  console.log(`GET request for id ${id} received`)
+  
   //sets up the params to tell the db which table and that the key will be the id grabbed from the url:
   const params = {
     Key: {
@@ -85,17 +89,6 @@ module.exports.getOrg = (event, context, callback) => {
     },
     TableName: orgsTable,
   };
-
-  // db.get(params, function (err, data) {
-  //   if (err) {
-  //     console.error(
-  //       'Unable to read item. Error JSON:',
-  //       JSON.stringify(err, null, 2)
-  //     );
-  //   } else {
-  //     console.log('GetItem succeeded:', JSON.stringify(data, null, 2));
-  //   }
-  // });
 
   return db
     .get(params)
@@ -111,31 +104,49 @@ module.exports.getOrg = (event, context, callback) => {
 
 //--------UPDATE ORG:--------
 
-// module.exports.updateOrg = (event, context, callback) => {
-//   const timestamp = new Date().getTime();
-//   const data = JSON.parse(event.body);
+module.exports.updateOrg = (event, context, callback) => {
+  const id = event.pathParameters.id;
+  console.log(`UPDATE request for id ${id} received`)
+  const body = JSON.parse(event.body);
+  // //dynamodb only lets you update one field at a time
 
-//   // const id = event.pathParameters.id;
-//   // const body = JSON.parse(event.body);
-//   // //dynamodb only lets you update one field at a time
-//   // const paramOrgName = body.paramOrgName;
-//   // const paramCategory = body.paramCategory;
-//   // const paramBriefBio = body.paramBriefBio;
-//   // const paramOpportunities = body.paramOpportunities;
-//   // const paramThreeThings = body.paramThreeThings;
-//   // const paramContactName = body.paramContactName;
-//   // const paramContactDetails = body.paramContactDetails;
-//   // const paramImg = body.paramImg;
+  const paramName = body.paramName;
+  const paramValue = body.paramValue;
 
-//   // const params = {
-//   //   key: {
-//   //     id: id
-//   //   },
-//   //   TableName: orgsTable,
-//   //   ConditionExpression: 'attribute_exists(id)',
-//   //   UpdateExpression: `set ${paramOrgName} = :v`,
-//   //   ExpressionAttributeValues = {
-//   //     ':v'
-//   //   }
-//   // }
-// };
+  const params = {
+    Key: {
+      id: id
+    },
+    TableName: orgsTable,
+    ConditionExpression: 'attribute_exists(id)',
+    UpdateExpression: `set ${paramOrgName} = :v`,
+    ExpressionAttributeValues = {
+      ':v': paramValue
+    },
+    ReturnValue: 'ALL_NEW'
+  }
+
+  return db.update(params)
+  .promise()
+  .then(res => {
+    callback(null, response(200, res))
+  }).catch(err => callback(null, response(err.statusCode, err)))
+};
+
+//--------DELETE ORG:--------
+
+module.exports.deleteOrg = (event, context, callback) =>{
+  const id = event.pathParameters.id;  
+  console.log(`DELETE request for id ${id} received`)
+  
+  const params = {
+    Key: {
+      id: id
+    },
+    TableName: postsTable
+  };
+  
+  return db.delete(params)
+  .promise()
+  .then(()=>callback(null, response(200, {message: `Org ${id} deleted successfully`})))
+}

@@ -102,11 +102,12 @@ module.exports.getOrg = (event, context, callback) => {
 
 module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
-  const reqBody = JSON.parse(event.body);
-  const { body, title } = reqBody;
+  const body = JSON.parse(event.body);
   //dynamodb only lets you update one field at a time (which is why this has to be a put request... it completely replaces each attribute each time)
-  //so have to do each field by name and value (i.e. FIXME:{"paramName": "orgName", "paramValue": "New Name"})
+  //so have to do each field by name and value (i.e. {"paramName": "orgName", "paramValue": "New Name"})
   //TODO: Need to consider this on the front end!
+  const paramName = body.paramName;
+  const paramValue = body.paramValue;
 
   const params = {
     Key: {
@@ -114,19 +115,18 @@ module.exports.updateOrg = (event, context, callback) => {
     },
     TableName: orgsTable,
     ConditionExpression: 'attribute_exists(id)',
-    UpdateExpression: 'SET title = :title, body = :body',
+    UpdateExpression: `set ${paramName} = :v`,
     ExpressionAttributeValues: {
-      ':title': title,
-      ':body': body,
+      ':v': paramValue,
     },
-    ReturnValues: 'ALL_NEW',
+    ReturnValue: 'ALL_NEW',
   };
 
   return db
     .update(params)
     .promise()
     .then((res) => {
-      callback(null, response(200, res.Attributes));
+      callback(null, response(200, { paramName, paramValue }));
     })
     .catch((err) => callback(null, response(err.statusCode, err)));
 };

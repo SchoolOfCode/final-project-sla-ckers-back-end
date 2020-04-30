@@ -1,3 +1,5 @@
+//FIXME: Error in update all attributes fx - see below!
+
 'use strict';
 const AWS = require('aws-sdk'); //requires AWS
 const db = new AWS.DynamoDB.DocumentClient({ apiVersion: '2019.11.21' }); //requires DynamoDB
@@ -11,6 +13,10 @@ function response(statusCode, message) {
   return {
     statusCode: statusCode,
     body: JSON.stringify(message),
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
   };
 }
 

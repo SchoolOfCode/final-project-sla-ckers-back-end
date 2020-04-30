@@ -99,6 +99,7 @@ module.exports.getOrg = (event, context, callback) => {
 };
 
 //--------UPDATE ORG - ALL ATTRIBUTES:--------
+//FIXME: Erroring! Says ExpressionAttributeValues can't be empty... This probably means it isn't pulling through the body, because that's where those feed from.
 
 module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
@@ -135,7 +136,6 @@ module.exports.updateOrg = (event, context, callback) => {
     ReturnValue: 'ALL_NEW',
   };
 
-  // update the org in the database
   return db
     .update(params)
     .promise()

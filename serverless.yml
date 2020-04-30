@@ -44,8 +44,15 @@ functions:
           path: /orgs/{id}
           method: get
           cors: true
-  updateOrg: #updates org by id (put req)
+  updateOrg: #updates whole org by id (put req)
     handler: handler.updateOrg
+    events:
+      - http:
+          path: /orgs/{id}
+          method: put
+          cors: true
+  updateOrgAttribute: #updates single attribute of org by id (put req)
+    handler: handler.updateOrgAttribute
     events:
       - http:
           path: /orgs/{id}

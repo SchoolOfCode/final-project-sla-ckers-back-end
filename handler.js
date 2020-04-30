@@ -98,9 +98,56 @@ module.exports.getOrg = (event, context, callback) => {
     .catch((err) => callback(null, response(err.statusCode, err)));
 };
 
-//--------UPDATE ORG:--------
+//--------UPDATE ORG - ALL ATTRIBUTES:--------
+//FIXME: Erroring! Says ExpressionAttributeValues can't be empty... This probably means it isn't pulling through the body, because that's where those feed from.
 
 module.exports.updateOrg = (event, context, callback) => {
+  const id = event.pathParameters.id;
+  const body = JSON.parse(event.body);
+
+  const params = {
+    Key: {
+      id: id,
+    },
+    TableName: orgsTable,
+    ConditionExpression: 'attribute_exists(id)',
+    UpdateExpression:
+      'SET #orgName = :orgName, #category = :category, #briefBio = :briefBio, #opportunities = :opportunities, #threeThings = :threeThings, #contactName = :contactName, #contactDetails = :contactDetails, #img = :img',
+    ExpressionAttributeNames: {
+      '#orgName': 'orgName',
+      '#category': 'category',
+      '#briefBio': 'briefBio',
+      '#opportunities': 'opportunities',
+      '#threeThings': 'threeThings',
+      '#contactName': 'contactName',
+      '#contactDetails': 'contactDetails',
+      '#img': 'img',
+    },
+    ExpressionAttributeValues: {
+      ':orgName': body.orgName,
+      ':category': body.category,
+      ':briefBio': body.briefBio,
+      ':opportunities': body.opportunities,
+      ':threeThings': body.threeThings,
+      ':contactName': body.contactName,
+      ':contactDetails': body.contactDetails,
+      ':img': body.img,
+    },
+    ReturnValue: 'ALL_NEW',
+  };
+
+  return db
+    .update(params)
+    .promise()
+    .then((res) => {
+      callback(null, response(200, res));
+    })
+    .catch((err) => callback(null, response(err.statusCode, err)));
+};
+
+//--------UPDATE ORG - SINGLE ATTRIBUTE:--------
+
+module.exports.updateOrgAttribute = (event, context, callback) => {
   const id = event.pathParameters.id;
   const body = JSON.parse(event.body);
   //dynamodb only lets you update one field at a time (which is why this has to be a put request... it completely replaces each attribute each time)

@@ -111,38 +111,6 @@ module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
   const reqBody = JSON.parse(event.body);
 
-  // const params = {
-  //   Key: {
-  //     id: id,
-  //   },
-  //   TableName: orgsTable,
-  // }
-  //   ConditionExpression: 'attribute_exists(id)',
-  //   UpdateExpression:
-  //     'SET #orgName = :orgName, #category = :category, #briefBio = :briefBio, #opportunities = :opportunities, #threeThings = :threeThings, #contactName = :contactName, #contactDetails = :contactDetails, #img = :img',
-  //   ExpressionAttributeNames: {
-  //     '#orgName': 'orgName',
-  //     '#category': 'category',
-  //     '#briefBio': 'briefBio',
-  //     '#opportunities': 'opportunities',
-  //     '#threeThings': 'threeThings',
-  //     '#contactName': 'contactName',
-  //     '#contactDetails': 'contactDetails',
-  //     '#img': 'img',
-  //   },
-  //   ExpressionAttributeValues: {
-  //     ':orgName': body.orgName,
-  //     ':category': body.category,
-  //     ':briefBio': body.briefBio,
-  //     ':opportunities': body.opportunities,
-  //     ':threeThings': body.threeThings,
-  //     ':contactName': body.contactName,
-  //     ':contactDetails': body.contactDetails,
-  //     ':img': body.img,
-  //   },
-  //   ReturnValue: 'ALL_NEW',
-  // };
-
   const org = {
     id: id,
     createdAt: new Date().toISOString(),
@@ -173,9 +141,7 @@ module.exports.updateOrg = (event, context, callback) => {
 module.exports.updateOrgAttribute = (event, context, callback) => {
   const id = event.pathParameters.id;
   const body = JSON.parse(event.body);
-  //dynamodb only lets you update one field at a time (which is why this has to be a put request... it completely replaces each attribute each time)
-  //so have to do each field by name and value (i.e. {"paramName": "orgName", "paramValue": "New Name"})
-  //TODO: Need to consider this on the front end!
+
   const paramName = body.paramName;
   const paramValue = body.paramValue;
 

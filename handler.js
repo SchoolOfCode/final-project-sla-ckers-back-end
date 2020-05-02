@@ -109,41 +109,58 @@ module.exports.getOrg = (event, context, callback) => {
 
 module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
-  const body = JSON.parse(event.body);
+  const reqBody = JSON.parse(event.body);
 
-  const params = {
-    Key: {
-      id: id,
-    },
-    TableName: orgsTable,
-    ConditionExpression: 'attribute_exists(id)',
-    UpdateExpression:
-      'SET #orgName = :orgName, #category = :category, #briefBio = :briefBio, #opportunities = :opportunities, #threeThings = :threeThings, #contactName = :contactName, #contactDetails = :contactDetails, #img = :img',
-    ExpressionAttributeNames: {
-      '#orgName': 'orgName',
-      '#category': 'category',
-      '#briefBio': 'briefBio',
-      '#opportunities': 'opportunities',
-      '#threeThings': 'threeThings',
-      '#contactName': 'contactName',
-      '#contactDetails': 'contactDetails',
-      '#img': 'img',
-    },
-    ExpressionAttributeValues: {
-      ':orgName': body.orgName,
-      ':category': body.category,
-      ':briefBio': body.briefBio,
-      ':opportunities': body.opportunities,
-      ':threeThings': body.threeThings,
-      ':contactName': body.contactName,
-      ':contactDetails': body.contactDetails,
-      ':img': body.img,
-    },
-    ReturnValue: 'ALL_NEW',
+  // const params = {
+  //   Key: {
+  //     id: id,
+  //   },
+  //   TableName: orgsTable,
+  // }
+  //   ConditionExpression: 'attribute_exists(id)',
+  //   UpdateExpression:
+  //     'SET #orgName = :orgName, #category = :category, #briefBio = :briefBio, #opportunities = :opportunities, #threeThings = :threeThings, #contactName = :contactName, #contactDetails = :contactDetails, #img = :img',
+  //   ExpressionAttributeNames: {
+  //     '#orgName': 'orgName',
+  //     '#category': 'category',
+  //     '#briefBio': 'briefBio',
+  //     '#opportunities': 'opportunities',
+  //     '#threeThings': 'threeThings',
+  //     '#contactName': 'contactName',
+  //     '#contactDetails': 'contactDetails',
+  //     '#img': 'img',
+  //   },
+  //   ExpressionAttributeValues: {
+  //     ':orgName': body.orgName,
+  //     ':category': body.category,
+  //     ':briefBio': body.briefBio,
+  //     ':opportunities': body.opportunities,
+  //     ':threeThings': body.threeThings,
+  //     ':contactName': body.contactName,
+  //     ':contactDetails': body.contactDetails,
+  //     ':img': body.img,
+  //   },
+  //   ReturnValue: 'ALL_NEW',
+  // };
+
+  const org = {
+    id: id,
+    createdAt: new Date().toISOString(),
+    orgName: reqBody.orgName,
+    category: reqBody.category,
+    briefBio: reqBody.briefBio,
+    opportunities: reqBody.opportunities,
+    threeThings: reqBody.threeThings,
+    contactName: reqBody.contactName,
+    contactDetails: reqBody.contactDetails,
+    img: reqBody.img,
   };
 
   return db
-    .update(params)
+    .put({
+      TableName: orgsTable,
+      Item: org,
+    })
     .promise()
     .then((res) => {
       callback(null, response(200, res));

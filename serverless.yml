@@ -51,13 +51,13 @@ functions:
           path: /orgs/{id}
           method: put
           cors: true
-  updateOrgAttribute: #updates single attribute of org by id (put req)
-    handler: handler.updateOrgAttribute
-    events:
-      - http:
-          path: /orgs/{id}
-          method: put
-          cors: true
+  # updateOrgAttribute: #updates single attribute of org by id (put req)
+  #   handler: handler.updateOrgAttribute
+  #   events:
+  #     - http:
+  #         path: /orgs/{id}
+  #         method: put
+  #         cors: true
   deleteOrg: #delete org by id
     handler: handler.deleteOrg
     events:

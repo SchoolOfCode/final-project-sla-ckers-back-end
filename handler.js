@@ -1,5 +1,3 @@
-//FIXME: Error in update all attributes fx - see below!
-
 'use strict';
 const AWS = require('aws-sdk'); //requires AWS
 const db = new AWS.DynamoDB.DocumentClient({ apiVersion: '2019.11.21' }); //requires DynamoDB
@@ -12,11 +10,13 @@ const orgsTable = process.env.ORGS_TABLE;
 function response(statusCode, message) {
   return {
     statusCode: statusCode,
-    body: JSON.stringify(message),
     headers: {
+      'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'OPTIONS,PUT,GET,DELETE',
       'Access-Control-Allow-Credentials': true,
     },
+    body: JSON.stringify(message),
   };
 }
 
@@ -48,7 +48,7 @@ module.exports.createOrg = (event, context, callback) => {
     category: reqBody.category,
     briefBio: reqBody.briefBio,
     opportunities: reqBody.opportunities,
-    threeThings: reqBody.threeThings,
+    qualities: reqBody.qualities,
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
@@ -105,7 +105,6 @@ module.exports.getOrg = (event, context, callback) => {
 };
 
 //--------UPDATE ORG - ALL ATTRIBUTES:--------
-//FIXME: Erroring! Says ExpressionAttributeValues can't be empty... This probably means it isn't pulling through the body, because that's where those feed from.
 
 module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
@@ -118,7 +117,7 @@ module.exports.updateOrg = (event, context, callback) => {
     category: reqBody.category,
     briefBio: reqBody.briefBio,
     opportunities: reqBody.opportunities,
-    threeThings: reqBody.threeThings,
+    qualities: reqBody.qualities,
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,

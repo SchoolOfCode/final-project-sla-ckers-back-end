@@ -1,5 +1,3 @@
-//FIXME: Error in update all attributes fx - see below!
-
 'use strict';
 const AWS = require('aws-sdk'); //requires AWS
 const db = new AWS.DynamoDB.DocumentClient({ apiVersion: '2019.11.21' }); //requires DynamoDB
@@ -48,7 +46,7 @@ module.exports.createOrg = (event, context, callback) => {
     category: reqBody.category,
     briefBio: reqBody.briefBio,
     opportunities: reqBody.opportunities,
-    threeThings: reqBody.threeThings,
+    qualities: reqBody.qualities,
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
@@ -105,7 +103,6 @@ module.exports.getOrg = (event, context, callback) => {
 };
 
 //--------UPDATE ORG - ALL ATTRIBUTES:--------
-//FIXME: Erroring! Says ExpressionAttributeValues can't be empty... This probably means it isn't pulling through the body, because that's where those feed from.
 
 module.exports.updateOrg = (event, context, callback) => {
   const id = event.pathParameters.id;
@@ -118,7 +115,7 @@ module.exports.updateOrg = (event, context, callback) => {
     category: reqBody.category,
     briefBio: reqBody.briefBio,
     opportunities: reqBody.opportunities,
-    threeThings: reqBody.threeThings,
+    qualities: reqBody.qualities,
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,

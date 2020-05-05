@@ -13,7 +13,8 @@ function response(statusCode, message) {
     headers: {
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'OPTIONS,PUT,GET,DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS, POST',
       'Access-Control-Allow-Credentials': true,
     },
     body: JSON.stringify(message),
@@ -52,6 +53,7 @@ module.exports.createOrg = (event, context, callback) => {
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
+    userId: reqBody.userId,
   };
 
   return db
@@ -121,6 +123,7 @@ module.exports.updateOrg = (event, context, callback) => {
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
+    userId: reqBody.userId,
   };
 
   return db

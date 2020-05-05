@@ -13,9 +13,8 @@ function response(statusCode, message) {
     headers: {
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS, POST',
       'Access-Control-Allow-Credentials': true,
+      'Access-Control-Allow-Methods': 'GET, OPTIONS, POST',
     },
     body: JSON.stringify(message),
   };
@@ -63,7 +62,7 @@ module.exports.createOrg = (event, context, callback) => {
     })
     .promise()
     .then(() => {
-      callback(null, response(201, org)); //uses helper function defined above to pass 201 as the status code and the org itself as the message
+      callback(null, response(200, org)); //uses helper function defined above to pass 201 (or 200 - changed it to this to bug-fix CORS) as the status code and the org itself as the message
     })
     .catch((err) => response(null, response(err.statusCode, err)));
 };

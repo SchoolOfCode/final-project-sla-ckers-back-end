@@ -52,7 +52,7 @@ module.exports.createOrg = (event, context, callback) => {
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
-    userId: reqBody.userId,
+    uid: reqBody.uid,
   };
 
   return db
@@ -122,7 +122,7 @@ module.exports.updateOrg = (event, context, callback) => {
     contactName: reqBody.contactName,
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
-    userId: reqBody.userId,
+    uid: reqBody.uid,
   };
 
   return db

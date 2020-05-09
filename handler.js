@@ -54,6 +54,7 @@ module.exports.createOrg = (event, context, callback) => {
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
     uid: reqBody.uid,
+    link: reqBody.link,
   };
 
   return db
@@ -124,6 +125,7 @@ module.exports.updateOrg = (event, context, callback) => {
     contactDetails: reqBody.contactDetails,
     img: reqBody.img,
     uid: reqBody.uid,
+    link: reqBody.link,
   };
 
   return db

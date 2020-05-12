@@ -14,7 +14,8 @@ function response(statusCode, message) {
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Methods': 'GET, OPTIONS, POST',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS, POST, PUT',
+      'Content-type': 'application/json',
     },
     body: JSON.stringify(message),
   };

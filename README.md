@@ -23,4 +23,6 @@ Thank you to Alexa Berry (@not_that_Alexa
 
 Much love to Chris, Ben, and the whole School of Code family for giving us the skills, encouragement, and safe space to become developers.
 
+Thanks to my mentor Emmanouil Kiagias for his patience and help.
+
 And shout out to Gareth McCumskey (@garethmcc) at Serverless HQ for reaching out on Twitter and helping me figure out how to slay the demon CORS error, and to Ionut Craciunescu (@icraciunescu) for introducing our bootcamp to Serverless and reviewing this code!

@@ -15,3 +15,12 @@ This feeds into AWS DynamoDB. We considered the data we’d be holding, frequenc
 ## Deploying changes:
 
 sls deploy
+
+## Acknowledgements:
+
+Thank you to Alexa Berry (@not_that_Alexa
+) and Sarah Barkley (@Barkle_Sarah), intrepid Team SLA-ckers members and Volt co-creators!
+
+Much love to Chris, Ben, and the whole School of Code family for giving us the skills, encouragement, and safe space to become developers.
+
+And shout out to Gareth McCumskey (@garethmcc) at Serverless HQ for reaching out on Twitter and helping me figure out how to slay the demon CORS error, and to Ionut Craciunescu (@icraciunescu) for introducing our bootcamp to Serverless and reviewing this code!
